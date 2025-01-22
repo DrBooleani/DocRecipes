@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Assets implements Serializable {
+public class Asset implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
