@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: docrecipesapi
+  profiles:
+    active: local
+  main:
+    banner-mode: off
+server:
+  port: 8080
