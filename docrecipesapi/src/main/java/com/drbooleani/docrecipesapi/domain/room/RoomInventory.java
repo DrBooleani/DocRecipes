@@ -1,5 +1,6 @@
 package com.drbooleani.docrecipesapi.domain.room;
 
+import com.drbooleani.docrecipesapi.domain._embeddedids.RoomInventoryId;
 import com.drbooleani.docrecipesapi.domain.assets.Asset;
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.drbooleani.docrecipesapi.domain.room;
+package com.drbooleani.docrecipesapi.domain._embeddedids;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,13 +11,13 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomInventoryId implements Serializable {
+public class AssessmentId implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Column(name = "asset_id")
     private Long assetId;
 
-    @Column(name = "room_id")
-    private Long roomId;
+    @Column(name = "patient_id")
+    private Long patientId;
 }
