@@ -8,40 +8,56 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class GenericCrudService<Entity, DTO> {
 
-    private final CrudRepository<Entity, Long> repository;
     private final ModelMapper modelMapper;
 
+    // Repositories injected via @Qualifier
+    private final Map<String, CrudRepository<Entity, Long>> repositories;
+
     @Autowired
-    public GenericCrudService(CrudRepository<Entity, Long> repository, ModelMapper modelMapper) {
-        this.repository = repository;
+    public GenericCrudService(Map<String, CrudRepository<Entity, Long>> repositories, ModelMapper modelMapper) {
+        this.repositories = repositories;
         this.modelMapper = modelMapper;
     }
 
-    public List<DTO> getAll(Class<DTO> dtoClass) {
-        return ((List<Entity>) this.repository.findAll())
+    // This method will set the repository dynamically based on a string (repository name)
+    private CrudRepository<Entity, Long> getRepository(String repositoryName) {
+        CrudRepository<Entity, Long> repository = repositories.get(repositoryName);
+        if (repository == null) {
+            throw new IllegalArgumentException("No repository found for name: " + repositoryName);
+        }
+        return repository;
+    }
+
+    public List<DTO> getAll(Class<DTO> dtoClass, String repositoryName) {
+        CrudRepository<Entity, Long> repository = getRepository(repositoryName);
+        return ((List<Entity>) repository.findAll())
                 .stream()
                 .map(entity -> modelMapper.map(entity, dtoClass))
                 .collect(Collectors.toList());
     }
 
-    public DTO getById(Long id, Class<Entity> entityClass, Class<DTO> dtoClass) {
-        return this.modelMapper.map(this.getEntity(id, entityClass), dtoClass);
+    public DTO getById(Long id, Class<Entity> entityClass, Class<DTO> dtoClass, String repositoryName) {
+        CrudRepository<Entity, Long> repository = getRepository(repositoryName);
+        return modelMapper.map(this.getEntity(id, repository), dtoClass);
     }
 
     @Transactional
-    public DTO save(DTO dto, Class<Entity> entityClass, Class<DTO> dtoClass) {
+    public DTO save(DTO dto, Class<Entity> entityClass, Class<DTO> dtoClass, String repositoryName) {
+        CrudRepository<Entity, Long> repository = getRepository(repositoryName);
         Entity entity = modelMapper.map(dto, entityClass);
         return modelMapper.map(repository.save(entity), dtoClass);
     }
 
     @Transactional
-    public DTO update(Long id, DTO dto, Class<Entity> entityClass, Class<DTO> dtoClass) {
-        Entity entity = getEntity(id, entityClass);
+    public DTO update(Long id, DTO dto, Class<Entity> entityClass, Class<DTO> dtoClass, String repositoryName) {
+        CrudRepository<Entity, Long> repository = getRepository(repositoryName);
+        Entity entity = getEntity(id, repository);
         for (var entityField : entity.getClass().getDeclaredFields()) {
             try {
                 entityField.setAccessible(true);
@@ -67,13 +83,14 @@ public class GenericCrudService<Entity, DTO> {
     }
 
     @Transactional
-    public void delete(Long id, Class<Entity> entityClass) {
-        Entity entity = getEntity(id, entityClass);
+    public void delete(Long id, Class<Entity> entityClass, String repositoryName) {
+        CrudRepository<Entity, Long> repository = getRepository(repositoryName);
+        Entity entity = getEntity(id, repository);
         repository.delete(entity);
     }
 
-    private Entity getEntity(Long id, Class<Entity> entityClass) {
+    private Entity getEntity(Long id, CrudRepository<Entity, Long> repository) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(entityClass.getSimpleName() + " Not Found with ID " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Entity not found with ID " + id));
     }
 }

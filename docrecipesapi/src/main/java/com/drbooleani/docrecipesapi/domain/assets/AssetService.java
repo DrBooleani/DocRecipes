@@ -11,6 +11,7 @@ import java.util.List;
 public class AssetService {
 
     private final GenericCrudService<Asset, AssetDTO> genericCrudService;
+    private final String assetRepository = "assetRepository";
 
     @Autowired
     public AssetService(GenericCrudService<Asset, AssetDTO> genericCrudService) {
@@ -18,22 +19,22 @@ public class AssetService {
     }
 
     public List<AssetDTO> getAllAssets() {
-        return this.genericCrudService.getAll(AssetDTO.class);
+        return this.genericCrudService.getAll(AssetDTO.class, assetRepository);
     }
 
     public AssetDTO getAssetById(Long id) {
-        return this.genericCrudService.getById(id, Asset.class, AssetDTO.class);
+        return this.genericCrudService.getById(id, Asset.class, AssetDTO.class, assetRepository);
     }
 
     public AssetDTO saveAsset(AssetDTO assetDTO) {
-        return this.genericCrudService.save(assetDTO, Asset.class, AssetDTO.class);
+        return this.genericCrudService.save(assetDTO, Asset.class, AssetDTO.class, assetRepository);
     }
 
     public AssetDTO updateAsset(Long id, AssetDTO assetDTO) {
-        return this.genericCrudService.update(id, assetDTO, Asset.class, AssetDTO.class);
+        return this.genericCrudService.update(id, assetDTO, Asset.class, AssetDTO.class, assetRepository);
     }
 
     public void deleteAsset(Long id) {
-        this.genericCrudService.delete(id, Asset.class);
+        this.genericCrudService.delete(id, Asset.class, assetRepository);
     }
 }
