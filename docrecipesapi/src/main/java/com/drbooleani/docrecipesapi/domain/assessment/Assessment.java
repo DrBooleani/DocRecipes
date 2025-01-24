@@ -25,17 +25,17 @@ public class Assessment implements Serializable {
     private AssessmentId assessmentId;
 
     @ManyToOne
-    @MapsId
-    @JoinColumn(name = "team_member_id")
+    @MapsId("teamMemberId")
+    @JoinColumn(name = "team_member_id", columnDefinition = "BIGINT")
     private TeamMember teamMember;
 
     @ManyToOne
-    @MapsId
-    @JoinColumn(name = "patient_id")
+    @MapsId("patientId")
+    @JoinColumn(name = "patient_id", columnDefinition = "BIGINT")
     private Patient patient;
 
     @ManyToOne
-    @MapsId
+    @MapsId("preOpAId")
     @JoinColumn(name = "pre_op_a_id")
     private PreOperativeAssessment preOperativeAssessment;
 
