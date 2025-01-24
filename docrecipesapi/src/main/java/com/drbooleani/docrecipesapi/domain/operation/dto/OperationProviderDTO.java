@@ -1,0 +1,14 @@
+package com.drbooleani.docrecipesapi.domain.operation.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class OperationProviderDTO {
+    private String type;
+}

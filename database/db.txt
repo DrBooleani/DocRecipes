@@ -1,0 +1,148 @@
+Table operations {
+  id integer [primary key]
+  type_id varchar
+  room_id integer
+  patient_id integer
+  state varchar
+  start_date timestamp
+}
+
+Table operation_types {
+  name varchar [primary key]
+  room_type varchar
+  duration_hours integer
+}
+
+Table operation_providers {
+  id integer [primary key]
+  type varchar
+  name varchar
+}
+
+Table assets {
+  id integer [primary key]
+  type varchar
+  name varchar
+}
+
+Table optype_opproviders {
+  optype_id varchar
+  opprovider_id integer
+  Indexes {
+    (optype_id, opprovider_id) [pk]
+  }
+}
+
+Table optype_assets {
+  optype_id varchar
+  asset_id integer
+  Indexes {
+    (optype_id, asset_id) [pk]
+  }
+}
+
+Table inventory {
+  asset_id integer
+  count integer
+}
+
+Table team_members {
+  id integer [primary key]
+  name varchar
+  opprovider_id integer
+}
+
+Table operation_rooms {
+  id integer [primary key]
+  room_nr integer
+  building_block varchar
+  floor varchar
+  type varchar
+  state varchar
+}
+
+Table room_inventory {
+  room_id integer
+  asset_id integer
+  count integer
+}
+
+Table pre_operative_assesments {
+  name varchar [primary key]
+}
+
+Table patients {
+  id integer [primary key]
+  name varchar
+  nin varchar
+}
+
+Table assesments {
+  team_member_id integer
+  patient_id integer
+  pre_op_a_id varchar
+  start_date timestamp
+  Indexes {
+    (team_member_id, patient_id, pre_op_a_id) [pk]
+  }
+}
+
+Table optype_pre_op_a {
+  optype_id varchar
+  pre_op_a_id varchar
+  Indexes {
+    (optype_id, pre_op_a_id) [pk]
+  }
+}
+
+Table operation_reports {
+  id integer [primary key]
+  team_member_id integer
+  operation_id integer
+  report varchar
+  Indexes {
+    (team_member_id, operation_id) [pk]
+  }
+}
+
+Table operation_team_member {
+  operation_id integer
+  team_member_id integer
+  Indexes {
+    (operation_id, team_member_id) [pk]
+  }
+}
+
+Ref: operation_team_member.operation_id > operations.id
+Ref: operation_team_member.team_member_id > team_members.id
+
+
+Ref: operation_reports.operation_id > operations.id
+Ref: operation_reports.team_member_id > team_members.id
+
+Ref: operations.patient_id > patients.id
+
+Ref: optype_assets.asset_id > assets.id
+Ref: optype_assets.optype_id > operation_types.name
+
+Ref: operations.type_id > operation_types.name
+
+Ref: optype_opproviders.opprovider_id > operation_providers.id
+Ref: optype_opproviders.optype_id > operation_types.name
+
+Ref: inventory.asset_id > assets.id
+
+Ref: team_members.opprovider_id > operation_providers.id
+
+Ref: operations.room_id > operation_rooms.id
+Ref: room_inventory.room_id > operation_rooms.id
+Ref: room_inventory.asset_id > assets.id
+
+Ref: optype_pre_op_a.optype_id > operation_types.name
+Ref: optype_pre_op_a.pre_op_a_id > pre_operative_assesments.name
+
+Ref: assesments.patient_id > patients.id
+Ref: assesments.pre_op_a_id > pre_operative_assesments.name
+Ref: assesments.team_member_id > team_members.id
+
+

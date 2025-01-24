@@ -70,7 +70,7 @@ CREATE TABLE "pre_operative_assesments" (
 CREATE TABLE "patients" (
   "id" integer PRIMARY KEY,
   "name" varchar,
-  "nin" integer
+  "nin" varchar
 );
 
 CREATE TABLE "assesments" (

@@ -1,0 +1,5 @@
+CREATE TABLE assets (
+    id BIGSERIAL PRIMARY KEY,
+    type VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL
+);
