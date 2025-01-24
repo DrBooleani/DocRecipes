@@ -24,13 +24,13 @@ public class RoomInventory implements Serializable {
     private RoomInventoryId roomInventoryId;
 
     @ManyToOne
-    @MapsId
-    @JoinColumn(name = "asset_id")
+    @MapsId("assetId")
+    @JoinColumn(name = "asset_id", columnDefinition = "BIGINT")
     private Asset asset;
 
     @ManyToOne
-    @MapsId
-    @JoinColumn(name = "room_id")
+    @MapsId("roomId")
+    @JoinColumn(name = "room_id", columnDefinition = "BIGINT")
     private OperationRoom operationRoom;
 
     private Integer count;
